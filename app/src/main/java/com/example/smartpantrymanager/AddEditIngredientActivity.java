@@ -5,6 +5,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,10 @@ public class AddEditIngredientActivity extends AppCompatActivity {
     private Spinner spinnerUnit;
 
     private DatabaseHelper databaseHelper;
+
+    // ID of the ingredient being edited
+    // -1 means we are adding a new ingredient
+    private int itemId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,13 +36,15 @@ public class AddEditIngredientActivity extends AppCompatActivity {
         edtExpiryDate = findViewById(R.id.edtExpiryDate);
         spinnerUnit = findViewById(R.id.spinnerUnit);
 
+        TextView txtTitle = findViewById(R.id.txtTitle);
+
         Button btnSaveIngredient =
                 findViewById(R.id.btnSaveIngredient);
 
         Button btnCancel =
                 findViewById(R.id.btnCancel);
 
-        // Units available for pantry ingredients
+        // Available measurement units
         String[] units = {
                 "units",
                 "g",
@@ -61,37 +68,101 @@ public class AddEditIngredientActivity extends AppCompatActivity {
 
         spinnerUnit.setAdapter(unitAdapter);
 
+        // Check if an ingredient ID was sent from MainActivity
+        if (getIntent().hasExtra("item_id")) {
+
+            itemId = getIntent().getIntExtra(
+                    "item_id",
+                    -1
+            );
+
+            // Change the title when editing
+            txtTitle.setText("Edit Ingredient");
+
+            // Load the existing ingredient
+            loadIngredient();
+        }
+
         // Save button
-        btnSaveIngredient.setOnClickListener(view ->
-                saveIngredient()
+        btnSaveIngredient.setOnClickListener(
+                view -> saveIngredient()
         );
 
         // Cancel button
-        btnCancel.setOnClickListener(view ->
-                finish()
+        btnCancel.setOnClickListener(
+                view -> finish()
         );
     }
 
+
+
+    private void loadIngredient() {
+
+        PantryItem item =
+                databaseHelper.getPantryItemById(itemId);
+
+        if (item == null) {
+
+            Toast.makeText(
+                    this,
+                    "Ingredient not found",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            finish();
+
+            return;
+        }
+
+        // Put saved values into the form
+        edtName.setText(item.getName());
+
+        edtQuantity.setText(
+                String.valueOf(item.getQuantity())
+        );
+
+        edtExpiryDate.setText(
+                item.getExpiryDate()
+        );
+
+        // Select the saved unit in the Spinner
+        String savedUnit = item.getUnit();
+
+        ArrayAdapter<String> adapter =
+                (ArrayAdapter<String>) spinnerUnit.getAdapter();
+
+        int position =
+                adapter.getPosition(savedUnit);
+
+        if (position >= 0) {
+
+            spinnerUnit.setSelection(position);
+        }
+    }
+
+
     private void saveIngredient() {
 
-        String name = edtName.getText()
-                .toString()
-                .trim();
+        String name =
+                edtName.getText()
+                        .toString()
+                        .trim();
 
-        String quantityText = edtQuantity.getText()
-                .toString()
-                .trim();
+        String quantityText =
+                edtQuantity.getText()
+                        .toString()
+                        .trim();
 
-        String unit = spinnerUnit
-                .getSelectedItem()
-                .toString();
+        String unit =
+                spinnerUnit.getSelectedItem()
+                        .toString();
 
-        String expiryDate = edtExpiryDate
-                .getText()
-                .toString()
-                .trim();
+        String expiryDate =
+                edtExpiryDate.getText()
+                        .toString()
+                        .trim();
 
-        // Validation: ingredient name
+        // Validate name
         if (name.isEmpty()) {
 
             edtName.setError(
@@ -103,7 +174,7 @@ public class AddEditIngredientActivity extends AppCompatActivity {
             return;
         }
 
-        // Validation: quantity
+        // Validate quantity
         if (quantityText.isEmpty()) {
 
             edtQuantity.setError(
@@ -119,7 +190,8 @@ public class AddEditIngredientActivity extends AppCompatActivity {
 
         try {
 
-            quantity = Double.parseDouble(quantityText);
+            quantity =
+                    Double.parseDouble(quantityText);
 
         } catch (NumberFormatException e) {
 
@@ -144,36 +216,71 @@ public class AddEditIngredientActivity extends AppCompatActivity {
             return;
         }
 
-        // Create pantry item
-        PantryItem item = new PantryItem(
-                0,
-                name,
-                quantity,
-                unit,
-                expiryDate
-        );
+        // Create the PantryItem
+        PantryItem item =
+                new PantryItem(
+                        itemId,
+                        name,
+                        quantity,
+                        unit,
+                        expiryDate
+                );
 
-        // Save to SQLite
-        boolean success =
-                databaseHelper.addPantryItem(item);
+        boolean success;
 
-        if (success) {
 
-            Toast.makeText(
-                    this,
-                    "Ingredient saved successfully",
-                    Toast.LENGTH_SHORT
-            ).show();
 
-            finish();
+        if (itemId == -1) {
 
-        } else {
+            success =
+                    databaseHelper.addPantryItem(item);
 
-            Toast.makeText(
-                    this,
-                    "Failed to save ingredient",
-                    Toast.LENGTH_SHORT
-            ).show();
+            if (success) {
+
+                Toast.makeText(
+                        this,
+                        "Ingredient added successfully",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                finish();
+
+            } else {
+
+                Toast.makeText(
+                        this,
+                        "Failed to add ingredient",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
+
+        }
+
+
+
+        else {
+
+            success =
+                    databaseHelper.updatePantryItem(item);
+
+            if (success) {
+
+                Toast.makeText(
+                        this,
+                        "Ingredient updated successfully",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                finish();
+
+            } else {
+
+                Toast.makeText(
+                        this,
+                        "Failed to update ingredient",
+                        Toast.LENGTH_SHORT
+                ).show();
+            }
         }
     }
 }

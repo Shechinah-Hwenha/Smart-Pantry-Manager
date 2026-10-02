@@ -1,4 +1,3 @@
-
 package com.example.smartpantrymanager;
 
 import android.content.ContentValues;
@@ -55,8 +54,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db,
-                          int oldVersion, int newVersion) {
+    public void onUpgrade(
+            SQLiteDatabase db,
+            int oldVersion,
+            int newVersion) {
 
         db.execSQL("DROP TABLE IF EXISTS recipe_ingredients");
         db.execSQL("DROP TABLE IF EXISTS recipes");
@@ -65,28 +66,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    // CREATE: Add an ingredient
+
+
     public boolean addPantryItem(PantryItem item) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+
         values.put("name", item.getName());
         values.put("quantity", item.getQuantity());
         values.put("unit", item.getUnit());
         values.put("expiry_date", item.getExpiryDate());
 
-        long result = db.insert("pantry_items", null, values);
+        long result = db.insert(
+                "pantry_items",
+                null,
+                values
+        );
 
         return result != -1;
     }
 
-    // READ: Get all pantry ingredients
+
     public ArrayList<PantryItem> getAllPantryItems() {
 
-        ArrayList<PantryItem> itemList = new ArrayList<>();
+        ArrayList<PantryItem> itemList =
+                new ArrayList<>();
 
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db =
+                this.getReadableDatabase();
 
         Cursor cursor = db.rawQuery(
                 "SELECT * FROM pantry_items ORDER BY name ASC",
@@ -94,24 +103,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         );
 
         if (cursor.moveToFirst()) {
+
             do {
+
                 int id = cursor.getInt(
-                        cursor.getColumnIndexOrThrow("id"));
+                        cursor.getColumnIndexOrThrow("id")
+                );
 
                 String name = cursor.getString(
-                        cursor.getColumnIndexOrThrow("name"));
+                        cursor.getColumnIndexOrThrow("name")
+                );
 
                 double quantity = cursor.getDouble(
-                        cursor.getColumnIndexOrThrow("quantity"));
+                        cursor.getColumnIndexOrThrow("quantity")
+                );
 
                 String unit = cursor.getString(
-                        cursor.getColumnIndexOrThrow("unit"));
+                        cursor.getColumnIndexOrThrow("unit")
+                );
 
                 String expiryDate = cursor.getString(
-                        cursor.getColumnIndexOrThrow("expiry_date"));
+                        cursor.getColumnIndexOrThrow("expiry_date")
+                );
 
-                PantryItem item = new PantryItem(
-                        id, name, quantity, unit, expiryDate);
+                PantryItem item =
+                        new PantryItem(
+                                id,
+                                name,
+                                quantity,
+                                unit,
+                                expiryDate
+                        );
 
                 itemList.add(item);
 
@@ -123,12 +145,63 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return itemList;
     }
 
-    // UPDATE: Edit an existing ingredient
+
+    public PantryItem getPantryItemById(int id) {
+
+        SQLiteDatabase db =
+                this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM pantry_items WHERE id = ?",
+                new String[]{
+                        String.valueOf(id)
+                }
+        );
+
+        PantryItem item = null;
+
+        if (cursor.moveToFirst()) {
+
+            String name = cursor.getString(
+                    cursor.getColumnIndexOrThrow("name")
+            );
+
+            double quantity = cursor.getDouble(
+                    cursor.getColumnIndexOrThrow("quantity")
+            );
+
+            String unit = cursor.getString(
+                    cursor.getColumnIndexOrThrow("unit")
+            );
+
+            String expiryDate = cursor.getString(
+                    cursor.getColumnIndexOrThrow("expiry_date")
+            );
+
+            item = new PantryItem(
+                    id,
+                    name,
+                    quantity,
+                    unit,
+                    expiryDate
+            );
+        }
+
+        cursor.close();
+
+        return item;
+    }
+
+
+
     public boolean updatePantryItem(PantryItem item) {
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db =
+                this.getWritableDatabase();
 
-        ContentValues values = new ContentValues();
+        ContentValues values =
+                new ContentValues();
+
         values.put("name", item.getName());
         values.put("quantity", item.getQuantity());
         values.put("unit", item.getUnit());
@@ -138,21 +211,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "pantry_items",
                 values,
                 "id = ?",
-                new String[]{String.valueOf(item.getId())}
+                new String[]{
+                        String.valueOf(item.getId())
+                }
         );
 
         return result > 0;
     }
 
-    // DELETE: Remove an ingredient
+
     public boolean deletePantryItem(int id) {
 
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db =
+                this.getWritableDatabase();
 
         int result = db.delete(
                 "pantry_items",
                 "id = ?",
-                new String[]{String.valueOf(id)}
+                new String[]{
+                        String.valueOf(id)
+                }
         );
 
         return result > 0;
