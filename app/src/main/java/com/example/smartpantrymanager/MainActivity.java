@@ -100,13 +100,16 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-        btnSuggestedRecipes.setOnClickListener(view ->
-                Toast.makeText(
-                        this,
-                        "Suggested Recipes screen coming later",
-                        Toast.LENGTH_SHORT
-                ).show()
-        );
+        btnSuggestedRecipes.setOnClickListener(view -> {
+
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    SuggestedRecipesActivity.class
+            );
+
+            startActivity(intent);
+        });
+        
 
         btnSettings.setOnClickListener(view ->
                 Toast.makeText(
