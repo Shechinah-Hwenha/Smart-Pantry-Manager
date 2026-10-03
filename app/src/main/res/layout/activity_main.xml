@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -40,6 +41,18 @@
         android:divider="#D8DEE8"
         android:dividerHeight="1dp"
         android:paddingTop="8dp" />
+
+    <TextView
+        android:id="@+id/txtEmptyPantry"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Your pantry is empty.\n\nTap '+ Add Ingredient' to add your first ingredient."
+        android:textSize="17sp"
+        android:textColor="#555555"
+        android:padding="24dp"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/btnSuggestedRecipes"
