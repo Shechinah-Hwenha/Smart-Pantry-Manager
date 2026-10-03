@@ -20,7 +20,7 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
 
         super(
                 context,
-                android.R.layout.simple_list_item_1,
+                0,
                 recipes
         );
 
@@ -39,25 +39,32 @@ public class RecipeAdapter extends ArrayAdapter<Recipe> {
             convertView =
                     LayoutInflater.from(context)
                             .inflate(
-                                    android.R.layout.simple_list_item_1,
+                                    R.layout.item_recipe,
                                     parent,
                                     false
                             );
         }
 
-        TextView textView =
+        TextView txtRecipeItemName =
                 convertView.findViewById(
-                        android.R.id.text1
+                        R.id.txtRecipeItemName
+                );
+
+        TextView txtRecipeItemDescription =
+                convertView.findViewById(
+                        R.id.txtRecipeItemDescription
                 );
 
         Recipe recipe =
                 recipes.get(position);
 
-        textView.setText(
+        txtRecipeItemName.setText(
                 recipe.getName()
         );
 
-        textView.setTextSize(18);
+        txtRecipeItemDescription.setText(
+                "You have all required ingredients"
+        );
 
         return convertView;
     }

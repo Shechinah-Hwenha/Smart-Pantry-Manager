@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_marginBottom="8dp"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:id="@+id/txtRecipeItemName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tomato Pasta"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        android:textColor="#17324D"
+        android:paddingBottom="6dp" />
+
+    <TextView
+        android:id="@+id/txtRecipeItemDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="You have all required ingredients"
+        android:textSize="15sp"
+        android:textColor="#555555" />
+
+</LinearLayout>
