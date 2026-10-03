@@ -109,15 +109,17 @@ public class MainActivity extends AppCompatActivity {
 
             startActivity(intent);
         });
-        
 
-        btnSettings.setOnClickListener(view ->
-                Toast.makeText(
-                        this,
-                        "Settings screen coming later",
-                        Toast.LENGTH_SHORT
-                ).show()
-        );
+
+        btnSettings.setOnClickListener(view -> {
+
+            Intent intent = new Intent(
+                    MainActivity.this,
+                    SettingsActivity.class
+            );
+
+            startActivity(intent);
+        });
     }
 
     // Load ingredients from the SQLite database
