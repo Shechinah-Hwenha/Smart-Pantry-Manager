@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="24dp">
 
         <TextView
             android:id="@+id/txtRecipeName"
@@ -17,39 +17,47 @@
             android:text="Recipe Name"
             android:textSize="28sp"
             android:textStyle="bold"
-            android:paddingBottom="20dp" />
+            android:paddingBottom="24dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Ingredients"
-            android:textSize="21sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:paddingBottom="10dp" />
+            android:paddingBottom="12dp" />
 
         <TextView
             android:id="@+id/txtIngredients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ingredients will appear here"
+            android:text="Ingredients"
             android:textSize="17sp"
+            android:lineSpacingExtra="6dp"
             android:paddingBottom="24dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Instructions"
-            android:textSize="21sp"
+            android:textSize="20sp"
             android:textStyle="bold"
-            android:paddingBottom="10dp" />
+            android:paddingBottom="12dp" />
 
         <TextView
             android:id="@+id/txtInstructions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Instructions will appear here"
+            android:text="Instructions"
             android:textSize="17sp"
-            android:lineSpacingExtra="6dp" />
+            android:lineSpacingExtra="6dp"
+            android:paddingBottom="30dp" />
+
+        <Button
+            android:id="@+id/btnBackToRecipes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back to Recipes" />
 
     </LinearLayout>
 

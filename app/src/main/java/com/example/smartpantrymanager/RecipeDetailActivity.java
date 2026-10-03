@@ -1,114 +1,79 @@
 package com.example.smartpantrymanager;
 
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeDetailActivity extends AppCompatActivity {
-
-    private DatabaseHelper databaseHelper;
 
     private TextView txtRecipeName;
     private TextView txtIngredients;
     private TextView txtInstructions;
+    private Button btnBackToRecipes;
+
+    private DatabaseHelper db;
+    private int recipeId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_recipe_detail);
 
-        databaseHelper = new DatabaseHelper(this);
+        txtRecipeName = findViewById(R.id.txtRecipeName);
+        txtIngredients = findViewById(R.id.txtIngredients);
+        txtInstructions = findViewById(R.id.txtInstructions);
+        btnBackToRecipes = findViewById(R.id.btnBackToRecipes);
 
-        txtRecipeName =
-                findViewById(R.id.txtRecipeName);
+        db = new DatabaseHelper(this);
 
-        txtIngredients =
-                findViewById(R.id.txtIngredients);
+        recipeId = getIntent().getIntExtra("recipe_id", -1);
 
-        txtInstructions =
-                findViewById(R.id.txtInstructions);
+        loadRecipe();
 
-        int recipeId =
-                getIntent().getIntExtra(
-                        "recipe_id",
-                        -1
-                );
-
-        if (recipeId == -1) {
-
-            Toast.makeText(
-                    this,
-                    "Recipe not found",
-                    Toast.LENGTH_SHORT
-            ).show();
-
-            finish();
-
-            return;
-        }
-
-        loadRecipe(recipeId);
+        btnBackToRecipes.setOnClickListener(view -> finish());
     }
 
-    private void loadRecipe(int recipeId) {
+    private void loadRecipe() {
 
-        Recipe recipe =
-                databaseHelper.getRecipeById(recipeId);
-
-        if (recipe == null) {
-
-            Toast.makeText(
-                    this,
-                    "Recipe not found",
-                    Toast.LENGTH_SHORT
-            ).show();
-
-            finish();
-
+        if (recipeId == -1) {
+            txtRecipeName.setText("Recipe Not Found");
+            txtIngredients.setText("");
+            txtInstructions.setText("");
             return;
         }
 
-        txtRecipeName.setText(
-                recipe.getName()
-        );
+        Recipe recipe = db.getRecipeById(recipeId);
 
-        txtInstructions.setText(
-                recipe.getInstructions()
-        );
+        if (recipe == null) {
+            txtRecipeName.setText("Recipe Not Found");
+            txtIngredients.setText("");
+            txtInstructions.setText("");
+            return;
+        }
 
-        ArrayList<RecipeIngredient> ingredients =
-                databaseHelper.getRecipeIngredients(
-                        recipeId
-                );
+        txtRecipeName.setText(recipe.getName());
+        txtInstructions.setText(recipe.getInstructions());
 
-        StringBuilder ingredientText =
-                new StringBuilder();
+        List<RecipeIngredient> ingredients =
+                db.getRecipeIngredients(recipeId);
 
-        for (RecipeIngredient ingredient :
-                ingredients) {
+        StringBuilder ingredientText = new StringBuilder();
+
+        for (RecipeIngredient ingredient : ingredients) {
 
             ingredientText.append("• ")
-                    .append(
-                            ingredient.getIngredientName()
-                    )
+                    .append(ingredient.getIngredientName())
                     .append(" - ")
-                    .append(
-                            ingredient.getRequiredQuantity()
-                    )
+                    .append(ingredient.getRequiredQuantity())
                     .append(" ")
-                    .append(
-                            ingredient.getUnit()
-                    )
+                    .append(ingredient.getUnit())
                     .append("\n");
         }
 
-        txtIngredients.setText(
-                ingredientText.toString()
-        );
+        txtIngredients.setText(ingredientText.toString());
     }
 }
