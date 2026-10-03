@@ -10,6 +10,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class AddEditIngredientActivity extends AppCompatActivity {
 
     private EditText edtName;
@@ -94,8 +99,6 @@ public class AddEditIngredientActivity extends AppCompatActivity {
         );
     }
 
-
-
     private void loadIngredient() {
 
         PantryItem item =
@@ -139,7 +142,6 @@ public class AddEditIngredientActivity extends AppCompatActivity {
             spinnerUnit.setSelection(position);
         }
     }
-
 
     private void saveIngredient() {
 
@@ -216,6 +218,21 @@ public class AddEditIngredientActivity extends AppCompatActivity {
             return;
         }
 
+        // Validate expiry date if one was entered
+        if (!expiryDate.isEmpty()) {
+
+            if (!isValidDate(expiryDate)) {
+
+                edtExpiryDate.setError(
+                        "Use date format YYYY-MM-DD"
+                );
+
+                edtExpiryDate.requestFocus();
+
+                return;
+            }
+        }
+
         // Create the PantryItem
         PantryItem item =
                 new PantryItem(
@@ -227,8 +244,6 @@ public class AddEditIngredientActivity extends AppCompatActivity {
                 );
 
         boolean success;
-
-
 
         if (itemId == -1) {
 
@@ -254,11 +269,7 @@ public class AddEditIngredientActivity extends AppCompatActivity {
                 ).show();
             }
 
-        }
-
-
-
-        else {
+        } else {
 
             success =
                     databaseHelper.updatePantryItem(item);
@@ -281,6 +292,30 @@ public class AddEditIngredientActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT
                 ).show();
             }
+        }
+    }
+
+    // Checks whether the date follows YYYY-MM-DD
+    private boolean isValidDate(String date) {
+
+        SimpleDateFormat dateFormat =
+                new SimpleDateFormat(
+                        "yyyy-MM-dd",
+                        Locale.getDefault()
+                );
+
+        dateFormat.setLenient(false);
+
+        try {
+
+            Date parsedDate =
+                    dateFormat.parse(date);
+
+            return parsedDate != null;
+
+        } catch (ParseException e) {
+
+            return false;
         }
     }
 }
