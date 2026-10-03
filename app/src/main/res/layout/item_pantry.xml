@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:layout_marginBottom="8dp"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:id="@+id/txtPantryName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tomatoes"
+        android:textSize="19sp"
+        android:textStyle="bold"
+        android:textColor="#17324D"
+        android:paddingBottom="6dp" />
+
+    <TextView
+        android:id="@+id/txtPantryQuantity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Quantity: 2 units"
+        android:textSize="16sp"
+        android:textColor="#333333"
+        android:paddingBottom="4dp" />
+
+    <TextView
+        android:id="@+id/txtPantryExpiry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Expiry: 2026-12-25"
+        android:textSize="15sp"
+        android:textColor="#666666" />
+
+</LinearLayout>

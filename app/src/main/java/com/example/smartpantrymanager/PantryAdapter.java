@@ -19,8 +19,9 @@ public class PantryAdapter extends ArrayAdapter<PantryItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
+
             convertView = LayoutInflater.from(getContext()).inflate(
-                    android.R.layout.simple_list_item_2,
+                    R.layout.item_pantry,
                     parent,
                     false
             );
@@ -28,20 +29,42 @@ public class PantryAdapter extends ArrayAdapter<PantryItem> {
 
         PantryItem item = getItem(position);
 
-        TextView title = convertView.findViewById(android.R.id.text1);
-        TextView details = convertView.findViewById(android.R.id.text2);
+        TextView txtPantryName =
+                convertView.findViewById(R.id.txtPantryName);
+
+        TextView txtPantryQuantity =
+                convertView.findViewById(R.id.txtPantryQuantity);
+
+        TextView txtPantryExpiry =
+                convertView.findViewById(R.id.txtPantryExpiry);
 
         if (item != null) {
-            title.setText(item.getName());
 
-            details.setText(
-                    "Quantity: " + item.getQuantity() + " " + item.getUnit()
-                            + "\nExpiry: "
-                            + (item.getExpiryDate() == null
-                            || item.getExpiryDate().isEmpty()
-                            ? "Not specified"
-                            : item.getExpiryDate())
+            txtPantryName.setText(
+                    item.getName()
             );
+
+            txtPantryQuantity.setText(
+                    "Quantity: "
+                            + item.getQuantity()
+                            + " "
+                            + item.getUnit()
+            );
+
+            String expiryDate = item.getExpiryDate();
+
+            if (expiryDate == null || expiryDate.isEmpty()) {
+
+                txtPantryExpiry.setText(
+                        "Expiry: Not specified"
+                );
+
+            } else {
+
+                txtPantryExpiry.setText(
+                        "Expiry: " + expiryDate
+                );
+            }
         }
 
         return convertView;
